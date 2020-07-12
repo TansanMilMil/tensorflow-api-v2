@@ -16,7 +16,14 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
   try {
-    console.log('start express server.');
+    if (!req.body || !req.body.pass) {
+      throw({status: 400});
+    }
+    const hasValidPass = await postgres.getPassAsync(req);
+    console.log(`hasValidPass: ${JSON.stringify(hasValidPass)}`);
+    if (hasValidPass <= 0) {
+      throw({status: 401});
+    }
     const result = await tensorFlow.executeAsync(req.body.imageBase64);
 
     return res.send({results: result});

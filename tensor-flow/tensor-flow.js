@@ -7,7 +7,6 @@ const NUMBER_OF_CHANNELS = 3;
 const readImage = image => {
   const imageBuffer = Buffer.from(image, 'base64');
   const pixels = jpeg.decode(imageBuffer, true);
-  console.log('decoded imageBeffer');
   return pixels;
 }
 
@@ -34,22 +33,16 @@ const toTensor3d = (jpegFile) => {
 
 const classify = async (image) => {
   const jpegFile = readImage(image);
-  console.log('converted jpeg');
   const tensor3d = toTensor3d(jpegFile);
-  console.log('converted tensor3d');
 
-  console.log(`mobilenet: ${mobilenet}`);
   const mobilenetModel = await mobilenet.load();
-  console.log('loaded model');
   const predictions = await mobilenetModel.classify(tensor3d);
 
-  console.log('classification results:', predictions);
   return predictions;
 }
 
 exports.executeAsync = async function (image) {
   try {
-    console.log('call classify');
     return await classify(image);
   }
   catch(e) {

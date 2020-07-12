@@ -11,8 +11,11 @@ const loadDbConnection = function() {
         password: db.PASSWORD,
         host: db.HOST,
         port: db.PORT,
+        ssl: {
+            rejectUnauthorized: false,
+        },
+        sslfactory: "org.postgresql.ssl.NonValidatingFactory",
     });
-    console.log(pool);
     return pool;
 };
 
@@ -30,8 +33,8 @@ exports.createOnetimePassAsync = async function(req) {
                 , referer
             )
             VALUES (
-                ${pass}
-                , ${req.get('Referrer')}
+                '${pass}'
+                , '${req.header('Referrer')}'
             );
         `);
         await client.query("COMMIT");
@@ -43,4 +46,26 @@ exports.createOnetimePassAsync = async function(req) {
     } finally {
         client.release();
     }
-}
+};
+
+exports.getPassAsync = async function(req) {
+    const pool = loadDbConnection();
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query(`
+            SELECT COUNT(*)
+            FROM api_onetime_pass
+            WHERE pass = '${req.body.pass}'
+            	AND current_timestamp <= create_at + INTERVAL '1 minutes'
+        `);
+        await client.query("COMMIT");
+        return result.rows[0].count;
+    }
+    catch (e) {
+        await client.query('ROLLBACK');
+        throw e;
+    } finally {
+        client.release();
+    }
+};
