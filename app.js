@@ -6,6 +6,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var helmet = require('helmet');
 var app = express();
 
 // view engine setup
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json({ limit:'10mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit:'10mb', type: ['image/*', 'application/x-www-form-urlencoded'], extended: true }));
 app.use(bodyParser.raw({type: '*/*'}));
+app.use(helmet());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

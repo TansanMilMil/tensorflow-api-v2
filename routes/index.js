@@ -1,7 +1,18 @@
 var express = require('express');
 var router = express.Router();
 const tensorFlow = require('../tensor-flow/tensor-flow');
-const response = require('../share/response');
+const postgres = require('../share/postgres');
+
+router.get('/', async function(req, res, next) {
+  try {
+    const pass = await postgres.createOnetimePassAsync(req);
+    return res.send({a: pass});
+  }
+  catch (e) {
+    console.log(e);
+    next(e);
+  }
+});
 
 router.post('/', async function(req, res, next) {
   try {
