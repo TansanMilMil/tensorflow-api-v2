@@ -26,7 +26,6 @@ router.post('/', async function(req, res, next) {
       throw({status: 401});
     }
     
-    console.log(`${req.body.imageBase64.slice(0, 50)}`);      
     let imageBase64;
     if (req.body.imageBase64.match(/data:image\/jpg;base64,/)) {
       imageBase64 = req.body.imageBase64.replace(/data:image\/jpg;base64,/, '');
@@ -35,7 +34,7 @@ router.post('/', async function(req, res, next) {
       imageBase64 = req.body.imageBase64.replace(/data:image\/jpeg;base64,/, '');
       
     } else if (req.body.imageBase64.match(/data:image\/png;base64,/)) {
-      console.log(`start encoding.`);
+      console.log(`start encoding to jpeg.`);
       imageBase64 = await encodeJpg.encodeJpgAsync(req.body.imageBase64)
         .catch(err => {
           console.error(err);
@@ -43,7 +42,6 @@ router.post('/', async function(req, res, next) {
         });
       console.log(`encoding ok.`);
     }
-    console.log(`${imageBase64.slice(0, 50)}`);      
 
     const result = await tensorFlow.executeAsync(imageBase64)
       .catch(err => {
