@@ -53,11 +53,17 @@ exports.getPassAsync = async function(req) {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
+        await client.query(`
+            --delete old passes
+            DELETE FROM api_onetime_pass
+            WHERE current_timestamp > create_at + INTERVAL '1 minutes'
+        `);        
         const result = await client.query(`
             SELECT COUNT(*)
             FROM api_onetime_pass
             WHERE pass = '${req.body.pass}'
             	AND current_timestamp <= create_at + INTERVAL '1 minutes'
+            ;
         `);
         await client.query("COMMIT");
         return result.rows[0].count;
