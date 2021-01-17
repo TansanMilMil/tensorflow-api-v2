@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ limit:'10mb', type: ['image/*', 'application/x-w
 app.use(bodyParser.raw({type: '*/*'}));
 app.use(helmet());
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/root');
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

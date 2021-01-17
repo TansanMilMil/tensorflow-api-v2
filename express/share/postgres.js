@@ -2,8 +2,8 @@ const crypto = require('crypto');
 const pg = require('pg');
 const fs = require('fs');
 const path = require('path');
-const db = JSON.parse(fs.readFileSync('./environment/dbconnection.json'));
-const env = JSON.parse(fs.readFileSync('./environment/env.json'));
+const db = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../environment/dbconnection.json')));
+const env = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../environment/env.json')));
 
 const loadDbConnection = function() {
     const pool = new pg.Pool({
