@@ -7,3 +7,5 @@ RUN yum install -y python3 && \
     yum install -y nodejs npm && \
     cd /express && \
     npm install --production
+EXPOSE 3000
+CMD ["/express/start.sh"]

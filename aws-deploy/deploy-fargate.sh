@@ -1,0 +1,1 @@
+aws cloudformation create-stack --stack-name deploy-fargate --template-body file://./aws-deploy/deploy-fargate.yml

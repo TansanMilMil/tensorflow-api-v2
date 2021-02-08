@@ -6,7 +6,7 @@ const encodeJpg = require('../share/encode-jpg');
 const colorAnalysis = require('../share/color-analysis');
 const getImageUrl = require('../share/get-image-url');
 
-router.get('/', async function(req, res, next) {
+router.get('/onetimePass', async function(req, res, next) {
   try {
     const pass = await postgres.createOnetimePassAsync(req);
     return res.send({a: pass});

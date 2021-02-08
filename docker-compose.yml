@@ -5,15 +5,10 @@ services:
     container_name: tensorflow-api-nginx
     build: 
       context: ./nginx
-    ports:
-      - 80:80  
     tty: true      
   express:
     image: tensorflow-api-express    
     container_name: tensorflow-api-express
     build:
       context: ./express
-    ports:
-      - 3000:3000
-    command: bash -c "cd /express && npm start"
     tty: true    
